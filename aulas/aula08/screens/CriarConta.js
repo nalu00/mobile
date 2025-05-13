@@ -1,20 +1,28 @@
 import { View } from "react-native";
 import { TextInput, Button, HelperText } from "react-native-paper";
 import { useForm, Controller } from "react-hook-form";
+import * as Yup from 'yup';
+import { yupResolver } from "@hookform/resolvers/yup";
 
 function CriarConta() {
+const schema = Yup.object().shape({
+  nome: Yup.string().required("Nome é obrigatorio"),
+  email: Yup.string().required("E-mail é obrigatorio").email("E-meial é invalido"),
+  senha: Yup.string().required("Senha é obrigatorio").min(8, "Deve ter 8 caracteres"),
+  confirmaSenha: Yup.string().oneOf([Yup.ref("senha"), null], "Senhas distintas").required("Confirma a Senha"),
+});
+
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm({ resolver: yupResolver(schema)});
 
   return (
     <View style={{ flex: 1, padding: 16 }}>
       <Controller
         control={control}
         name="nome"
-        rules={{ required: "Nome é obrigatorio" }}
         render={({ field: { value, onchange, onBlur } }) => (
           <TextInput
             label="Nome"
@@ -33,7 +41,6 @@ function CriarConta() {
       <Controller
         control={control}
         name="email"
-        rules={{ required: "E-mail é obrigatorio" }}
         render={({ field: { value, onchange } }) => (
           <TextInput
             label="E-mail"
@@ -52,7 +59,6 @@ function CriarConta() {
       <Controller
         control={control}
         name="senha"
-        rules={{ required: "Senha é obrigatorio" }}
         render={({ field: { value, onchange } }) => (
           <TextInput
             label="Senha"
@@ -70,7 +76,6 @@ function CriarConta() {
       <Controller
         control={control}
         name="confirmaSenha"
-        rules={{ required: "Confirmar senha é obrigatorio" }}
         render={({ field: { value, onchange } }) => (
           <TextInput
             label="Confirmar senha"

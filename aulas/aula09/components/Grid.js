@@ -1,31 +1,34 @@
+import { useContext } from "react";
 import { View, FlatList } from "react-native";
 import { Button, Text } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 
-const categorias = [
-  "Restaurantes",
-  "Lanchonetes",
-  "Bares",
-  "Pizzarias",
-  "Mercados",
-  "Sorveterias",
-  "Cafeterias",
-  "Padarias"
-];
+import { LojaContext } from "../contexts/LojaContext";
 
 function Grid() {
-    const navigation = useNavigation();
+  const navigation = useNavigation();
+  const { categorias } = useContext(LojaContext);
+
   return (
     <View>
-      <Text variant="titleMedium" style={{marginBottom: 8}}>Categorias</Text>
+      <Text variant="titleMedium" style={{ marginBottom: 8 }}>
+        Categorias
+      </Text>
       <FlatList
         data={categorias}
         numColumns={2}
         keyExtractor={(item, index) => index}
         renderItem={({ item }) => (
           <View style={{ flex: 1, marginBottom: 8, marginRight: 8 }}>
-            <Button mode="outlined" onPress={() => navigation.navigate("Lojas", {categoria: item})}>
-              {item}
+            <Button
+              icon={item.icone}
+              contentStyle={{ flexDirection: "row-reverse" }}
+              mode="outlined"
+              onPress={() =>
+                navigation.navigate("Lojas", { categoria: item.nome })
+              }
+            >
+              {item.nome}
             </Button>
           </View>
         )}
